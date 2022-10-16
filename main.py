@@ -1,3 +1,5 @@
+#aazemskov# Давай свои комменты будем выделять - #aazemskov# | #Zak# - чтобы понимать где чей коммент
+
 import random as r
 import sqlite3 as sql
 
@@ -20,22 +22,19 @@ dbCursor.execute(sql_create_quests_table)
 
 
 hp = 0
-coins = 0
+gold = 0 #aazemskov# поменял coins на gold, ибо coins тяжело вдупляю)
 damage = 0
 dexterity = 0 # Параметра уклонения пока нет. Уклонение считается просто от ловкости
 armor = 0 # Пока не применяется в бою
 
 def printParameters():
-    print("У тебя {0} жизней, {1} урона и {2} монет. Твоя ловкость {3} и у тебя {4} брони".format(hp, damage, coins, dexterity, armor))
-
+    print(f"У тебя {hp} жизней, {damage} урона и {gold} монет. Твоя ловкость {dexterity} и у тебя {armor} брони") #aazemskov# поменял "format" на f-строку, ибо для меня легче читаемо. Если против - маякни.
 
 def printHp():
     print("У тебя", hp, "жизней.")
 
-
-def printCoins():
-    print("У тебя", coins, "монет.")
-
+def printgold():
+    print("У тебя", gold, "монет.")
 
 def printDamage():
     print("У тебя", damage, "урона.")
@@ -47,14 +46,14 @@ def printArmor():
 def meetShop():
     global hp
     global damage
-    global coins
+    global gold
     global armor
 
     def buy(cost):
-        global coins
-        if coins >= cost:
-            coins -= cost
-            printCoins()
+        global gold
+        if gold >= cost:
+            gold -= cost
+            printgold()
             return True
         print("У тебя маловато монет!")
         return False
@@ -78,10 +77,10 @@ def meetShop():
     printParameters()
 
     while input("Что ты будешь делать (зайти/уйти): ").lower() == "зайти":
-        print("1) Одна единица здоровья -", oneHpCost, "монет;")
-        print("2) Три единицы здоровья -", threeHpCost, "монет;")
-        print("3) {0} {1} - {2} монет".format(weaponRarity, weapon, weaponCost))
-        print("4) {0} - {1} монет".format(armorInStock, armorСost))
+        print("1) Малое зелье здоровья (+1 hp) -", oneHpCost, "монет;") #aazemskov#
+        print("2) Большое зелье здоровья (+3 hp) -", threeHpCost, "монет;") #aazemskov#
+        print(f"3) {weaponRarity} {weapon} (+{weaponDmg} dmg) - {weaponCost} монет") #aazemskov# См. коммент про def printParameters()
+        print(f"4) {armorInStock} (+{armorLvl} block) - {armorСost} монет") #aazemskov# См. коммент про def printParameters()
 
         choice = input("Что хочешь приобрести: ")
         if choice == "1":
@@ -106,20 +105,17 @@ def meetShop():
 
 def meetMonster():
     global hp
-    global coins
-
+    global gold
     monsterLvl = r.randint(1, 3)
     monsterHp = monsterLvl
     monsterDmg = monsterLvl * 2 - 1
     monsterEvasion = monsterLvl
     monsterArmor = monsterLvl
-    monsters = ["Grock", "Clop", "Cholop", "Madrock", "Lilbitch"]
-
+    monsters = ["Жопошник", "Кракозябрь", "Поцык", "КозакЪ"] #aazemskov# чуть обновил монстряков
+    monsterRarities = ["Дырявый", "чОткий", "Старый", "Дипломированный"] #aazemskov# добавил им "редкости"
+    monsterRarity = monsterRarities[r.randint(1, 4) - 1] #aazemskov# ну и рандомная редкость
     monster = r.choice(monsters)
-
-    print(
-        "Ты набрел на монстра - {0}, у него {1} уровень, {2} жизней и {3} урона.".format(monster, monsterLvl, monsterHp,
-                                                                                         monsterDmg))
+    print(f"Ты набрел на монстра - {monsterRarity} {monster}, у него {monsterLvl} уровень, {monsterHp} жизней и {monsterDmg} урона.") #aazemskov# См. коммент про def printParameters()
     printParameters()
 
     while monsterHp > 0:
@@ -147,30 +143,30 @@ def meetMonster():
             continue
 
         if monsterHp > 0:
-            monterHit = r.randint(1, 10)
-            if monterHit > dexterity:
+            monsterHit = r.randint(1, 10)
+            if monsterHit > dexterity:
                 hp -= monsterDmg
                 print("Монстр атаковал и у тебя осталось", hp, "жизней.")
-            elif monterHit <= dexterity:
+            elif monsterHit <= dexterity:
                 print("Монстр атаковал, но ты увернулся! У тебя осталось", hp, "жизней.")
         if hp <= 0:
             break
     else:
         loot = r.randint(0, 2) + monsterLvl
-        coins += loot
+        gold += loot
         print("Тебе удалось одолеть монстра, за что ты получил", loot, "монет.")
-        printCoins()
+        printgold()
 
 
-def initGame(initHp, initCoins, initDamage, initDext, initArmor):
+def initGame(initHp, initgold, initDamage, initDext, initArmor):
     global hp
-    global coins
+    global gold
     global damage
     global dexterity
     global armor
 
     hp = initHp
-    coins = initCoins
+    gold = initgold
     damage = initDamage
     dexterity = initDext
     armor = initArmor
@@ -187,7 +183,8 @@ def gameLoop():
     elif situation == 1:
         meetMonster()
     else:
-        input("Блуждаем...")
+        input(""" - Здесь холодно и грустно, путник. Поговори со мной...
+ - Кто здесь???""")
 
 
 initGame(3, 500, 1, 1, 0)

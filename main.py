@@ -1,4 +1,5 @@
 #aazemskov# Давай свои комменты будем выделять - #aazemskov# | #Zak# - чтобы понимать где чей коммент
+
 import random as r
 import sqlite3 as sql
 
@@ -29,14 +30,11 @@ armor = 0 # Пока не применяется в бою
 def printParameters():
     print(f"У тебя {hp} жизней, {damage} урона и {gold} монет. Твоя ловкость {dexterity} и у тебя {armor} брони") #aazemskov# поменял "format" на f-строку, ибо для меня легче читаемо. Если против - маякни.
 
-
 def printHp():
     print("У тебя", hp, "жизней.")
 
-
 def printgold():
     print("У тебя", gold, "монет.")
-
 
 def printDamage():
     print("У тебя", damage, "урона.")
@@ -68,7 +66,6 @@ def meetShop():
     weaponCost = r.randint(3, 10) * weaponLvl
     weapon = r.choice(weapons)
     armorLvl = r.randint(1, 3)
-    weaponBlock = r.randint(1, 3) * armorLvl #aazemskov# добавил уровень блокируемого урона.
     armorTypes = ["Кожаная броня", "Кольчужный доспех", "Мифрильный доспех"]
     armorInStock = armorTypes[armorLvl - 1]
     armorСost = armorLvl * 4
@@ -83,7 +80,7 @@ def meetShop():
         print("1) Малое зелье здоровья (+1 hp) -", oneHpCost, "монет;") #aazemskov#
         print("2) Большое зелье здоровья (+3 hp) -", threeHpCost, "монет;") #aazemskov#
         print(f"3) {weaponRarity} {weapon} (+{weaponDmg} dmg) - {weaponCost} монет") #aazemskov# См. коммент про def printParameters()
-        print(f"4) {armorInStock} (+{weaponBlock} block) - {armorСost} монет") #aazemskov# См. коммент про def printParameters()
+        print(f"4) {armorInStock} (+{armorLvl} block) - {armorСost} монет") #aazemskov# См. коммент про def printParameters()
 
         choice = input("Что хочешь приобрести: ")
         if choice == "1":
@@ -109,7 +106,6 @@ def meetShop():
 def meetMonster():
     global hp
     global gold
-
     monsterLvl = r.randint(1, 3)
     monsterHp = monsterLvl
     monsterDmg = monsterLvl * 2 - 1
@@ -119,7 +115,6 @@ def meetMonster():
     monsterRarities = ["Дырявый", "чОткий", "Старый", "Дипломированный"] #aazemskov# добавил им "редкости"
     monsterRarity = monsterRarities[r.randint(1, 4) - 1] #aazemskov# ну и рандомная редкость
     monster = r.choice(monsters)
-
     print(f"Ты набрел на монстра - {monsterRarity} {monster}, у него {monsterLvl} уровень, {monsterHp} жизней и {monsterDmg} урона.") #aazemskov# См. коммент про def printParameters()
     printParameters()
 
@@ -127,8 +122,8 @@ def meetMonster():
         choice = input("Что будешь делать (атака/бег): ").lower()
 
         if choice == "атака":
-            playerHit = r.randint(1, 10)   #aazemskov# не совсем понял про playerHit
-            if playerHit > monsterEvasion: #aazemskov# распиши чуть подробнее, плиз.
+            playerHit = r.randint(1, 10)
+            if playerHit > monsterEvasion:
                 monsterHp -= damage
                 print("Ты атаковал монстра и у него осталось", monsterHp, "жизней.")
             elif playerHit <= monsterEvasion:
@@ -147,12 +142,12 @@ def meetMonster():
         else:
             continue
 
-        if monsterHp > 0: # monter поменял на monster
-            monsterHit = r.randint(1, 10) # monter поменял на monster
-            if monsterHit > dexterity: # monter поменял на monster
-                hp -= monsterDmg # monter поменял на monster
+        if monsterHp > 0:
+            monsterHit = r.randint(1, 10)
+            if monsterHit > dexterity:
+                hp -= monsterDmg
                 print("Монстр атаковал и у тебя осталось", hp, "жизней.")
-            elif monsterHit <= dexterity: # monter поменял на monster
+            elif monsterHit <= dexterity:
                 print("Монстр атаковал, но ты увернулся! У тебя осталось", hp, "жизней.")
         if hp <= 0:
             break

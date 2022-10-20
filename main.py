@@ -213,6 +213,14 @@ def meetMonster():
             printQuests()
         else:
             continue
+
+        if monsterHp > 0:
+            monsterHit = r.randint(1, 10)
+            if monsterHit > dexterity:
+                hp -= monsterDmg
+                print("Монстр атаковал и у тебя осталось", hp, "жизней.")
+            elif monsterHit <= dexterity:
+                print("Монстр атаковал, но ты увернулся! У тебя осталось", hp, "жизней.")
         if hp <= 0:
             break
     else:
